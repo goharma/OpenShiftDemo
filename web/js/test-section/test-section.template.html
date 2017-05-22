@@ -1,0 +1,69 @@
+<div class="section-header">Tests</div>
+<div class="section-body">
+    <table width="100%">
+        <tr>
+            <td>
+                <div class="test_container" style="width: 300px; height: 300px;">
+                    <div ng-hide="hideTest0" style="width: 300px; height: 300px; display: inline-block;"
+                         class="ng-hide">
+                        Choose a test to run
+                    </div>
+                    <div ng-hide="hideTest1" style="width: 300px; height: 300px; display: inline-block;"
+                         class="ng-hide">
+                        <p><b>DESCRIPTION</b><br>Auto-Scaling based on cpu usage. OpenShift can scale the
+                            number of nodes to meet demand. This test will generate load on the nodes and
+                            show nodes being brought up.</p>
+                        <p><b>STEPS</b><br>
+                        <ol>
+                            <li>All pods are deleted except one.</li>
+                            <li>Load is put on the application</li>
+                        </ol>
+                        </p>
+                        <p><b>EXPECTED RESULT</b><br>Once load increases to the threshold, pods will come
+                            online to meet demand.</p>
+                    </div>
+                    <div ng-hide="hideTest2" style="width: 300px; height: 300px; display: inline-block;"
+                         class="ng-hide">
+                        <p><b>DESCRIPTION</b><br>Auto-Scaling based on requests. OpenShift can scale the
+                            number of nodes to meet demand. This test will generate load on the nodes and
+                            show nodes being brought up.</p>
+                        <p><b>EXPECTED RESULT</b><br>Global Thermonuclear War.  Or, once load increases to the threshold, nodes will come
+                            online.</p>
+                    </div>
+                    <div ng-hide="hideTest3" style="width: 300px; height: 300px; display: inline-block;"
+                         class="ng-hide">
+                        <p><b>DESCRIPTION</b><br>With high availibility server outages </p>
+                        <p><b>EXPECTED RESULT</b><br>World peace.  Or, some pods are deleted, the session will move to another
+                            server.</p>
+                    </div>
+                </div>
+            </td>
+            <td valign="top">
+                <div style="display: inline-block;">
+                    <table class="padding">
+                        <tr>
+                            <td>
+                                <select class="button" ng-options="test as test.name for test in tests"
+                                        ng-model="test" ng-change="change()"></select>
+                            </td>
+                            <td valign="top">
+                                <a ng-click="run_test()" href=""><img src="images/running-man-32.png"></a>
+                            </td>
+                        </tr>
+                        <!-- tr>
+                            <td colspan="2">
+                                <div class="section_header">Results</div>
+                                <div class="section_container">
+                                    <textarea ng-model="testResults"></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>OpenShift Token <input ng-model="openshift_token"></td>
+                        </tr -->
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

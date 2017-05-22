@@ -1,0 +1,53 @@
+<div class="section-header" ng-click="$ctrl.hideConfig = !$ctrl.hideConfig">
+    <img src="images/gear-2-32.png">
+</div>
+<div id="config-section" class="section-body" ng-hide="$ctrl.hideConfig">
+
+    <table border="1">
+        <tr><td>Environment</td>
+            <td>
+                <select ng-model="$ctrl.appConfig.mwe_env" ng-change="$ctrl.change()">
+                    <option value="dev">Dev</option>
+                    <option value="demo">Demo</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                OpenShift URL:
+            </td>
+            <td>
+                <textarea ng-model="$ctrl.appConfig.openshift_proxy_url"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                OpenShift Token
+            </td>
+            <td>
+                <input width="" ng-model="$ctrl.appConfig.openshift_token">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Requests
+            </td>
+            <td>
+                <select style="position:relative; top: 0;" ng-model="$ctrl.Appconfig.request_count">
+                    <option value=""></option>
+                    <option value="1">1</option>
+                    <option value="10">10</option>
+                    <option value="100">100</option>
+                </select>
+                <input style="position:relative; top: 0; z-index: 2" ng-model="$ctrl.appConfig.request_count">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <button ng-click="$ctrl.update(); $ctrl.hideConfig = 1;">Update</button>
+                <button ng-click="$ctrl.hideConfig = 1;">Cancel</button>
+            </td>
+        </tr>
+    </table>
+</div>

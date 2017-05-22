@@ -1,0 +1,388 @@
+<!doctype html>
+<html ng-app="demo">
+<head>
+    <!-- meta http-equiv="refresh" content="5; URL=http://192.168.73.104/" -->
+    <meta charset="utf-8">
+    <title>Docker/openShift Demo Application</title>
+    <script src="js/angular.js"></script>
+    <!-- script src="/DockerDemoApp/js/helloworld.js"></script-->
+    <!-- script>
+        setTimeout(function(){
+            window.location.reload(1);
+        }, 5000);
+    </script -->
+    <style>
+        body {
+            background-color: darkslategray;
+        }
+
+        .padding img {
+            padding: 10px;
+        }
+
+        .section_header {
+            font-size: 48px;
+            font-variant: all-petite-caps;
+            font-weight: bold;
+        }
+
+        .section_container {
+            padding: 20px;
+            margin: 20px;
+        }
+
+        div, td, body, div {
+            color: white;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 400;
+            line-height: 20px;
+        }
+
+        .node_container {
+            padding: 10px;
+            width: 100%;
+            height: 400px;
+        }
+
+        .node {
+            width: 400px;
+            display: inline-block;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        .node.running {
+            background-color: limegreen;
+        }
+
+        .node.shutdown {
+            background-color: lightgray;
+        }
+
+        .node.pending {
+            background-color: lightgray;
+        }
+
+        .node.failed {
+            background-color: red;
+        }
+
+        .node.admin {
+            background-color: orange;
+        }
+
+        .vm_container {
+            padding: 20px;
+        }
+
+        .button {
+            font-size: 24px;
+            background-color: cornflowerblue;
+            width: 300px;
+            height: 40px;
+            border: 1px solid white;
+        }
+    </style>
+</head>
+
+<body ng-controller="Hello">
+
+<table width="100%">
+    <tr>
+        <td valign="top" width="50%">
+            <div class="section_header">Pods</div>
+            <div class="section_container vm_container" style="width:100%">
+                <!-- select ng-model="$ctrl.orderProp">
+                    <option value="state" selected>State</option>
+                    <option value="name">Name</option>
+                </select -->
+                <div class="node_container">
+                    <div class="section_header" ng-hide="podsLoaded">Loading....</div>
+                    <ul>
+                        <li ng-repeat="x in data.items | orderBy: $ctrl.orderProp" style="display: inline-block;">
+                            <a href="">
+                                <div class="node {{x.status.phase|lowercase}}">
+                                    <table>
+                                        <tr>
+                                            <td rowspan="5"><img src="img/{{x.status.phase|lowercase}}.png" width='48'>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Name:</td>
+                                            <td>{{x.metadata.name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>State:</td>
+                                            <td>{{x.status.phase}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pid IP:</td>
+                                            <td>{{x.status.podIP}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Node Name:</td>
+                                            <td>{{x.spec.nodeName}}</td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    <div ng-bind="'Last Updated: ' + lastUpdate"></div>
+                    <div ng-bind="'Result: ' + testResults"></div>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="section_header">Current Pod Information</div>
+            <div class="section_container">
+                <div ng-bind="'HostName:' + session_data.response.ServerName"></div>
+                <div ng-bind="'Session ID:' + session_data.response.sessionId"></div>
+            </div>
+            <div class="section_header">Tests</div>
+            <div class="section_container" ng-controller="Hello">
+                <table width="100%">
+                    <tr>
+                        <td>
+                            <div class="test_container" style="width: 300px; height: 300px;">
+                                <div ng-hide="hideTest0" style="width: 300px; height: 300px; display: inline-block;"
+                                     class="ng-hide">
+                                    Choose a test to run
+                                </div>
+                                <div ng-hide="hideTest1" style="width: 300px; height: 300px; display: inline-block;"
+                                     class="ng-hide">
+                                    <p><b>DESCRIPTION</b><br>Auto-Scaling based on cpu usage. OpenShift can scale the
+                                        number of nodes to meet demand. This test will generate load on the nodes and
+                                        show nodes being brought up.</p>
+                                    <p><b>EXPECTED RESULT</b><br> Once load increases to the threshold, nodes will come
+                                        online.</p>
+                                </div>
+                                <div ng-hide="hideTest2" style="width: 300px; height: 300px; display: inline-block;"
+                                     class="ng-hide">
+                                    <p><b>DESCRIPTION</b><br>Auto-Scaling based on requests. OpenShift can scale the
+                                        number of nodes to meet demand. This test will generate load on the nodes and
+                                        show nodes being brought up.</p>
+                                    <p><b>EXPECTED RESULT</b><br>Once load increases to the threshold, nodes will come
+                                        online.</p>
+                                </div>
+                                <div ng-hide="hideTest3" style="width: 300px; height: 300px; display: inline-block;"
+                                     class="ng-hide">
+                                    <p><b>DESCRIPTION</b><br>With high availibility server outages </p>
+                                    <p><b>EXPECTED RESULT</b><br>Some pods are deleted, the session will move to another
+                                        server.</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td valign="top">
+                            <div style="display: inline-block;">
+                                <table class="padding" >
+                                    <tr>
+                                        <td>
+                                            <select class="button" ng-options="test as test.name for test in tests"
+                                                    ng-model="test" ng-change="change()"></select>
+                                        </td>
+                                        <td valign="top">
+                                            <a ng-click="run_test()" href=""><img src="img/running-man-32.png"></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="section_header">Results</div>
+                                            <div class="section_container">
+                                                <textarea ng-model="testResults"></textarea>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>OpenShift Token <input ng-model="openshift_token"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>
+<script>
+    /* PROXIES */
+    mymod = angular.module('demo', []);
+
+    mymod.config(['$httpProvider', function ($httpProvider) {
+        $httpProvider.defaults.timeout = 10000;
+    }]);
+
+    /* *************************************************************/
+    /* CONTROLLERS */
+    /* *************************************************************/
+    mymod.controller('Hello', function ($scope, $http, $interval) {
+        /* GLOBAL VARS */
+        this.orderProp = 'state';
+        $scope.openshift_token = 'XmnmT4VoskmhUX7bylnAaR6Ihxqp842sB_CdQxns21w';
+        $scope.myText = "Debug";
+
+        $scope.wlsurl = 'wls_proxy.jsp';
+        $scope.os_url = 'os_proxy.jsp?openshift_token=' + $scope.openshift_token;
+
+        $scope.hideTest0 = 0;
+        $scope.hideTest1 = 1;
+        $scope.hideTest2 = 1;
+        $scope.hideTest3 = 1;
+
+        $scope.testname = "None";
+        $scope.testResults = "No test runs.";
+        $scope.lastUpdate = new Date().toLocaleTimeString();
+
+        $scope.testdata = {
+            "response": [
+                {"status": "OK", "name": "ha"}
+            ]
+        };
+
+        var config = {
+            headers: {
+                'Authorization': 'Basic d2VibG9naWM6d2VibG9naWMxMjM='
+            }
+        };
+
+        $scope.updateTime = function () {
+            $scope.lastUpdate = new Date().toLocaleTimeString();
+        };
+        $scope.session_data = {};
+
+        $scope.getSessionUrl = function () {
+            // alert('get session');
+            session_url = 'session.jsp'
+            $http.get(session_url).then(function (response) {
+                $scope.session_data = response.data;
+            })
+        }
+
+        $scope.getUrl = function () {
+            $http.get(
+                $scope.os_url
+            ).then(function (response) {
+                $scope.data = response.data;
+                $scope.updateTime();
+                $scope.podsLoaded = 1;
+
+
+            });
+        };
+
+        $scope.myData = {};
+        $scope.myData.doClick = function () {
+            alert('clickc')
+        };
+
+        $interval(function () {
+            $scope.getSessionUrl();
+            $scope.getUrl();
+        }, 5000);
+
+        $scope.change = function () {
+            switch ($scope.test.name) {
+                case "Auto-Scaling (CPU)":
+                    $scope.hideTest0 = 1;
+                    $scope.hideTest1 = 0;
+                    $scope.hideTest2 = 1;
+                    $scope.hideTest3 = 1;
+                    break;
+                case "Auto-Scaling (Requests)":
+                    $scope.hideTest0 = 1;
+                    $scope.hideTest1 = 1;
+                    $scope.hideTest2 = 0;
+                    $scope.hideTest3 = 1;
+                    break;
+                case "High Availability":
+                    $scope.hideTest0 = 1;
+                    $scope.hideTest1 = 1;
+                    $scope.hideTest2 = 1;
+                    $scope.hideTest3 = 0;
+                    break;
+            }
+        };
+
+        /* RUN TESTS */
+        $scope.tests = [
+            {id: 1, name: 'Auto-Scaling (CPU)'},
+            {id: 2, name: 'Auto-Scaling (Requests)'},
+            {id: 3, name: 'High Availability'}
+        ];
+        $scope.test_enum = {
+            AUTO_SCALING_CPU: 1,
+            AUTO_SCALING_REQ: 2,
+            HA: 3
+        };
+
+        $scope.updateTestResults = function (resultStr) {
+            $scope.testResults = resultStr;
+        };
+
+        $scope.run_test = function () {
+            $scope.testResults = "Test starting.";
+
+            switch ($scope.test.id) {
+                case $scope.test_enum.AUTO_SCALING_CPU:
+                    $scope.testResults = "RUNNING";
+                    // url = 'https://ocpnp-dev.fhlmc.com:8443/oapi/v1';
+                    url = 'autoscale_cpu.jsp';
+                    $scope.request_count = 100;
+                    for (i = 0; i < 20; i++) {
+                        $scope.testResults = i;
+                        $http.get(url
+                        ).then(function (response) {
+                            $scope.testdata = response.data;
+                            $scope.testResults = "COMPLETE";
+                        });
+                    }
+                    /*$http.get(url
+                    ).then(function (response) {
+                        $scope.testdata = response.data;
+                        $scope.testResults = "COMPLETE";
+                    });*/
+                    break;
+                case $scope.test_enum.AUTO_SCALING_REQ:
+                    $scope.testResults = "RUNNING";
+                    // url = 'https://ocpnp-dev.fhlmc.com:8443/oapi/v1';
+                    url = 'autoscale_request.jsp';
+
+                    $scope.request_count = 100;
+                    for (i = 0; i < $scope.request_count; i++) {
+                        $scope.testResults = $scope.testResults + "Sending request # " + i;
+                        $http.get(url
+                        ).then(function (response) {
+                            $scope.testdata = response.data;
+                            $scope.testResults = $scope.testResults + "Completed request #" + i;
+                        });
+                    }
+                    break;
+
+                case $scope.test_enum.HA:
+                    /* ~~~~~~~~~~~~~~~~~~~~~~ */
+                    /* High Availability Test */
+                    /* ~~~~~~~~~~~~~~~~~~~~~~ */
+                    url = 'delete_proxy.jsp';
+                    $http.get(
+                        url
+                    ).then(function (response) {
+
+                        $scope.testdata = response.data;
+                        $scope.testname = $scope.testdata.response[0].name;
+                        // alert("DEBUG: Called test:" + $scope.testname + " at " + url);
+                        $scope.getUrl();
+                        $scope.testResults = "Test completed.";
+                    });
+                    break;
+            }
+        }
+    });
+</script>
+</body>
+</html>

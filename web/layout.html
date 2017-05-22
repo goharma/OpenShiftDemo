@@ -1,0 +1,53 @@
+<html ng-app="demoApp">
+<head>
+    <link rel="favicon" href="favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="css/demoapp.css">
+    <link rel="stylesheet" type="text/css" href="css/podanimate.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-cookies.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-resource.js"></script>
+</head>
+<body>
+<div class="box box1">
+    <pod-section></pod-section>
+</div>
+
+<div class="box box2">
+    <div id="info-section-container">
+        <info-section></info-section>
+    </div>
+    <div id="test-section-container">
+        <test-section></test-section>
+    </div>
+
+</div>
+<config-section></config-section>
+
+<script src="js/anime/anime.min.js"></script>
+
+<script src="js/demoapp.js"></script>
+
+<script src="js/core/core.module.js"></script>
+
+<script src="js/core/status/status.module.js"></script>
+<script src="js/core/status/status.service.js"></script>
+
+<script src="js/core/appconfig/appconfig.module.js"></script>
+<script src="js/core/appconfig/appconfig.service.js"></script>
+
+<script src="js/pod-section/pod-section.module.js"></script>
+<script src="js/pod-section/pod-section.component.js"></script>
+
+<script src="js/test-section/test-section.module.js"></script>
+<script src="js/test-section/test-section.component.js"></script>
+
+<script src="js/info-section/info-section.module.js"></script>
+<script src="js/info-section/info-section.component.js"></script>
+
+<script src="js/config-section/config-section.module.js"></script>
+<script src="js/config-section/config-section.component.js"></script>
+
+</body>
+</html>

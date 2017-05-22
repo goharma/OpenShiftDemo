@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="OpenShiftDemo: TC archive">
+    <output-path>$PROJECT_DIR$/out/artifacts/OpenShiftDemo__TC_archive</output-path>
+    <root id="archive" name="OpenShiftDemo_ TC archive.war">
+      <element id="artifact" artifact-name="OpenShiftDemo: TC" />
+    </root>
+  </artifact>
+</component>

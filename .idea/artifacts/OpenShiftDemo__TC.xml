@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="OpenShiftDemo: TC">
+    <output-path>$PROJECT_DIR$/../../apache-tomcat-9.0.0.M21/webapps/OpenShiftDemo</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="OpenShiftDemo/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="OpenShiftDemo" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

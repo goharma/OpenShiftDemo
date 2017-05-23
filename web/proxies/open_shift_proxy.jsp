@@ -16,9 +16,9 @@
     // ResourceBundle resource = ResourceBundle.getBundle("open_shift_proxy");
     // String url=resource.getString("url");
 
-    String token = request.getParameter("openshift_token");
-    String openshift_url = request.getParameter("openshift_url");
-
+    String token = request.getParameter("token");
+    // String openshift_url = request.getParameter("openshift_url");
+String openshift_url = "https://ocpnp-dev.fhlmc.com:8443/api/v1/namespaces/mwe-demo/pods";
     System.out.println("OS URL: " + openshift_url);
     // http://www.nakov.com/blog/2009/07/16/disable-certificate-validation-in-java-ssl-connections/
     // Create a trust manager that does not validate certificate chains
@@ -73,6 +73,6 @@
     } catch (MalformedURLException e) {
         %><%= "BAD URL " %><%
     } catch (IOException e) {
-            e.getMessage();
+        sbf.append(e.getMessage());
     }
 %><%= sbf.toString() %>

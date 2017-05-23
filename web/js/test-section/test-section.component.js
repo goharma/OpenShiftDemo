@@ -52,7 +52,7 @@ angular.
                     case $scope.test_enum.AUTO_SCALING_CPU:
                         $scope.$parent.$broadcast('testStatusUpdate', "Running Auto Scaling (CPU) Test");
                         // url = 'https://ocpnp-dev.fhlmc.com:8443/oapi/v1';
-                        $scope.url = 'tests/autoscale_cpu.jsp';
+                        $scope.url = 'tests/autoscale_cpu.jsp?duration=20';
                         $scope.request_count = 100;
                         /*for (i = 0; i < 20; i++) {
                             $scope.testResults = i;

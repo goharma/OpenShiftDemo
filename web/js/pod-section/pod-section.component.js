@@ -29,7 +29,7 @@ angular.
                 $scope.getUrl();
                 lastUpdate = new Date().toLocaleTimeString();
                 $scope.$parent.$broadcast("podsUpdated", lastUpdate);
-            }, 5000);
+            }, 2000);
 
             $scope.getUrl();
 

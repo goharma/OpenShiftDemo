@@ -145,25 +145,26 @@ public void rando(){
 <%
 
 String status = "SUCCESS";
-try{
-    Integer duration = Integer.valueOf(request.getParameter("duration"));
+for(int i=0; i<10;i++)
+    try{
+        Integer duration = Integer.valueOf(request.getParameter("duration"));
 
-    long t= System.currentTimeMillis();
-    long end = t+(duration.intValue()*1000);
-    while(System.currentTimeMillis() < end) {
-        new Thread(new Runnable() {
-                int j=0;
-                Date date = new Date();
-                long now = date.getTime();
-                public void run() {
-                            Thread thread = Thread.currentThread();
+        long t= System.currentTimeMillis();
+        long end = t+(duration.intValue()*1000);
+        while(System.currentTimeMillis() < end) {
+            new Thread(new Runnable() {
+                    int j=0;
+                    Date date = new Date();
+                    long now = date.getTime();
+                    public void run() {
+                                Thread thread = Thread.currentThread();
 
-                    System.out.println("Running: " + thread.getName());
-                    rando();
-                }
-                }).start();
-    }
-    System.out.println("DONE");
+                        System.out.println("Running: " + thread.getName());
+                        rando();
+                    }
+                    }).start();
+        }
+        System.out.println("DONE");
     }catch(Exception e){
         status="ERROR";
     }

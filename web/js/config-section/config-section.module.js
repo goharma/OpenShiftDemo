@@ -1,1 +1,0 @@
-angular.module('configSection', ['core.status', 'core.appconfig']);

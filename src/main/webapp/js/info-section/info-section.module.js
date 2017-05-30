@@ -1,0 +1,1 @@
+angular.module('infoSection', ['core.status']);

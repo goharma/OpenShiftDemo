@@ -1,1 +1,0 @@
-angular.module('podSection', ['ngCookies', 'core.appconfig']);

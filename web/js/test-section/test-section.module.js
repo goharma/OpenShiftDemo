@@ -1,1 +1,0 @@
-angular.module('testSection', ['core.status']);

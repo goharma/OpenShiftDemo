@@ -23,8 +23,6 @@ import java.security.cert.X509Certificate;
  * Created by c43144 on 5/30/2017.
  */
 
-
-
 @Path("/")
 public class RESTProxy {
 
@@ -118,7 +116,9 @@ public class RESTProxy {
             response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(dc));
 
 
-        }catch(Exception e){}
+        }catch(Exception e){
+
+        }
 
         return response;
     }

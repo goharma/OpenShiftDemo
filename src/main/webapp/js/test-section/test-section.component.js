@@ -11,19 +11,19 @@ angular.
 
             $scope.change = function () {
                 switch ($scope.test.name) {
-                    case "Auto-Scaling (CPU)":
+                    case $scope.tests[0].name:
                         $scope.hideTest0 = 1;
                         $scope.hideTest1 = 0;
                         $scope.hideTest2 = 1;
                         $scope.hideTest3 = 1;
                         break;
-                    case "Auto-Scaling (Requests)":
+                    case $scope.tests[1].name:
                         $scope.hideTest0 = 1;
                         $scope.hideTest1 = 1;
                         $scope.hideTest2 = 0;
                         $scope.hideTest3 = 1;
                         break;
-                    case "High Availability":
+                    case $scope.tests[2].name:
                         $scope.hideTest0 = 1;
                         $scope.hideTest1 = 1;
                         $scope.hideTest2 = 1;
@@ -34,7 +34,7 @@ angular.
 
             $scope.tests = [
                 {id: 1, name: 'Auto-Scaling (CPU)'},
-                {id: 2, name: 'Auto-Scaling (Requests)'},
+                {id: 2, name: 'External Tool Scaling (Session Count)'},
                 {id: 3, name: 'High Availability'}
             ];
             $scope.test_enum = {
@@ -81,8 +81,10 @@ angular.
                         // url = 'https://ocpnp-dev.fhlmc.com:8443/oapi/v1';
                         $scope.url = 'tests/autoscale_request.jsp';
 
+                        // poll for number of sessions
 
-                        dc = $scope.setdeploymentconfig(Appconfig.replicas);
+                        // when session count reaches threashold increase replicas
+                        dc = this.setdeploymentconfig(Appconfig.replicas);
 
 
                         $scope.request_count = $cookies.get('request_count');
@@ -108,7 +110,7 @@ angular.
                                 $scope.getUrl();
                                 $scope.$parent.$broadcast('testStatusUpdate', "SUCCESS");
                             },
-                            /* FAILE */
+                            /* FAIL */
                             function(response){
                                 $scope.testStatus = "FAILURE";
                                 $scope.$parent.$broadcast('testStatusUpdate', 'FAILED');
@@ -118,20 +120,24 @@ angular.
                 }
             };
 
-            $scope.setdeploymentconfig = function(replicas){
+            this.setdeploymentconfig = function(replicas){
                 console.log("setdeploymentconfig");
                 // Deployment configs url
                 oc_url = 'https://ocpnp-dev.fhlmc.com:8443';
                 dc_url = '/oapi/v1/namespaces/mwe-demo/deploymentconfigs/ms-mwe-demo';
                 dc_proxy_url='proxies/dc_proxy_get.jsp?token=' + Appconfig.openshift_token;
 
+                // First get the DeploymentConfig
                 $http.get(dc_proxy_url).then(
                     /* Success */
                     function (response) {
                         $scope.dc = response.data;
+
+                // Update replicas to what you want
                         $scope.dc.spec.replicas=replicas
                     }
-                ).then(
+                // Then PUT the updated DeploymentConfig
+                    ).then( //
                     function(response){
                         // Update replicas
                         $scope.dc.spec.replicas = replicas;

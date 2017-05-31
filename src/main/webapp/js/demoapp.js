@@ -4,6 +4,7 @@
 angular.module('demoApp', [
     /* AngularJS Dependencies*/
     'ngAnimate',
+    'ngResource',
     /* App Dependencies*/
     'core',
     'podSection',

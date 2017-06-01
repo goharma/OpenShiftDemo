@@ -10,6 +10,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -25,6 +26,7 @@ import java.security.cert.X509Certificate;
 
 @Path("/")
 public class RESTProxy {
+    // @Context private HttpServletRequest request;
 
     //
     // For ssl connection to os master, just going to fake it.
@@ -68,6 +70,16 @@ public class RESTProxy {
         return sc;
     }
 
+    @GET
+    @Path("/rest/session_id")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSessionID(){
+        Response response = null;
+
+
+
+        return response;
+    }
 
     @PUT
     @Path("/rest/dc_proxy_put_rest/{token}/{project}")

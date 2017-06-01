@@ -22,7 +22,7 @@
     String token = request.getParameter("token");
     // String openshift_url = request.getParameter("openshift_url");
     String openshift_url = "https://ocpnp-dev.fhlmc.com:8443/oapi/v1/namespaces/jb-demo/deploymentconfigs/jb-demo";
-    System.out.println("OS URL: " + openshift_url);
+    // System.out.println("OS URL: " + openshift_url);
     // http://www.nakov.com/blog/2009/07/16/disable-certificate-validation-in-java-ssl-connections/
     // Create a trust manager that does not validate certificate chains
     TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {

@@ -10,13 +10,14 @@ angular.
             $scope.lastUpdate = new Date().toLocaleTimeString();
 
             $scope.getUrl = function () {
-                console.log(Appconfig.openshift_proxy_url + "?token=" + Appconfig.openshift_token);
+                //console.log(Appconfig.openshift_proxy_url + "?token=" + Appconfig.openshift_token);
                 $http.get(
                     Appconfig.openshift_proxy_url + "?token=" + Appconfig.openshift_token
                 ).then(
                     /* SUCCESS */
                     function (response) {
                         $scope.pods = response.data;
+                        Appconfig.podcount = $scope.pods.items.length;
                     },
                     /* FAIL */
                     function (response) {

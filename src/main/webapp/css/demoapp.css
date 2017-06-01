@@ -76,6 +76,9 @@ button {
 .pod.failed {
     background-color: red;
 }
+.pod.pending {
+    background-color: goldenrod;
+}
 .pod.admin {
     background-color: orange;
 }

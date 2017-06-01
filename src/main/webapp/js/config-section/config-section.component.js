@@ -19,7 +19,7 @@ angular.module('configSection').component('configSection', {
 
         this.initEnvDev = function () {
             Appconfig.openshift_proxy_url = this.dev_openshift_proxy_url;
-            Appconfig.openshift_token = 'NA';
+            Appconfig.openshift_token = $cookies.get('openshift_token');
             Appconfig.request_count = '10';
             Appconfig.mwe_env = 'dev';
             Appconfig.project = 'jb-demo';
@@ -28,10 +28,10 @@ angular.module('configSection').component('configSection', {
 
         this.initEnvDemo = function () {
             Appconfig.openshift_proxy_url = this.demo_openshift_proxy_url;
-            Appconfig.openshift_token = 'NA';
             Appconfig.request_count = '100';
             Appconfig.mwe_env = 'demo';
             Appconfig.project = 'jb-demo';
+            Appconfig.openshift_token = $cookies.get('openshift_token');
             this.appConfig = Appconfig;
         };
 

@@ -2,12 +2,14 @@ angular.
     module('testSection').
     component('testSection', {
         templateUrl: 'js/test-section/test-section.template.html',
-        controller: ['$scope','$http','$cookies','Status', 'Appconfig',function TestSectionController($scope, $http, $cookies, Status, Appconfig) {
+        controller: ['$timeout', '$interval', '$scope','$http','$cookies','Status', 'Appconfig',function TestSectionController($timeout, $interval, $scope, $http, $cookies, Status, Appconfig) {
             /* RUN TESTS */
             $scope.hideTest0 = 0;
             $scope.hideTest1 = 1;
             $scope.hideTest2 = 1;
             $scope.hideTest3 = 1;
+
+            this.myreplicas = null;
 
             $scope.change = function () {
                 switch ($scope.test.name) {
@@ -52,28 +54,37 @@ angular.
                     case $scope.test_enum.AUTO_SCALING_CPU:
                         $scope.$parent.$broadcast('testStatusUpdate', "Running Auto Scaling (CPU) Test");
                         // url = 'https://ocpnp-dev.fhlmc.com:8443/oapi/v1';
-                        $scope.url = 'tests/autoscale_cpu.jsp?duration=20';
-                        $scope.request_count = 100;
-                        /*for (i = 0; i < 20; i++) {
-                            $scope.testResults = i;
-                            $http.get(url
-                            ).then(function (response) {
-                                $scope.testdata = response.data;
-                                $scope.testResults = "COMPLETE";
-                            });
-                        }*/
-                        $http.get($scope.url).then(
-                            /* success */
-                            function(response) {
-                                // console.log("Your name is: " + response.data);
-                                $scope.$parent.$broadcast('testStatusUpdate', "SUCCESS");
-                            },
-                            /* failure */
-                            function(error) {
-                                // console.log("The request failed: " + error);
-                                $scope.$parent.$broadcast('testStatusUpdate', "FAIL");
+                        $scope.url = 'tests/autoscale_cpu.jsp?duration=1';
+                        Appconfig.replicas=1;
+                        dc = setdeploymentconfig();
+                        // Appconfig.replicas=dc.status.replicas;
+                        $scope.$parent.$broadcast('testStatusUpdate', "Set number of pods to 1");
+
+                        $scope.$watch(
+                            function(){ return Appconfig.podcount; },
+                            function(podcount){
+                                $scope.$parent.$broadcast('testStatusUpdate', "Current pod count: " + podcount);
+                                if(podcount == 1){
+
+                                    $scope.$parent.$broadcast('testStatusUpdate', "Starting Test.");
+                                    $http.get($scope.url).then(
+                                        /* success */
+                                        function(response) {
+                                            $scope.$parent.$broadcast('testStatusUpdate', "SUCCESS");
+                                        },
+                                        /* failure */
+                                        function(error) {
+                                            $scope.$parent.$broadcast('testStatusUpdate', "FAIL");
+                                        }
+                                    );
+                                }else{
+                                    $scope.$parent.$broadcast('testStatusUpdate', "Waiting for pods count to be 1");
+                                }
                             }
                         );
+
+
+
                         break;
                     case $scope.test_enum.AUTO_SCALING_REQ:
                         $scope.$parent.$broadcast('testStatusUpdate', "Running Auto Scaling (Requests) Test");
@@ -84,7 +95,7 @@ angular.
                         // poll for number of sessions
 
                         // when session count reaches threashold increase replicas
-                        dc = this.setdeploymentconfig(Appconfig.replicas);
+                        dc = setdeploymentconfig();
 
 
                         $scope.request_count = $cookies.get('request_count');
@@ -120,7 +131,21 @@ angular.
                 }
             };
 
-            this.setdeploymentconfig = function(replicas){
+            getreplicacount = function(){
+                dc_proxy_url='proxies/dc_proxy_get.jsp?token=' + Appconfig.openshift_token;
+                $scope.replicas=0;
+
+                $http.get(dc_proxy_url).then(
+                    /* Success */
+                    function (response) {
+                        $scope.replicas = response.data.status.replicas;
+                    }
+                );
+
+                return $scope.replicas;
+            };
+
+            setdeploymentconfig = function(){
                 console.log("setdeploymentconfig");
                 // Deployment configs url
                 oc_url = 'https://ocpnp-dev.fhlmc.com:8443';
@@ -134,13 +159,13 @@ angular.
                         $scope.dc = response.data;
 
                 // Update replicas to what you want
-                        $scope.dc.spec.replicas=replicas
+                        $scope.dc.spec.replicas=Appconfig.replicas;
                     }
                 // Then PUT the updated DeploymentConfig
                     ).then( //
                     function(response){
                         // Update replicas
-                        $scope.dc.spec.replicas = replicas;
+                        // $scope.dc.spec.replicas = replicas;
                         console.log($scope.dc);
                         $http(
                             {
@@ -159,7 +184,7 @@ angular.
                             function(response){
                                 console.log("OK")
                             },
-                            function(){
+                            function(response){
                                 console.log(response.data)
                             }
                         )

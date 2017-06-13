@@ -49,84 +49,17 @@ angular.
                 $scope.testResults = resultStr;
             };
 
+
             $scope.run_test = function () {
                 switch ($scope.test.id) {
                     case $scope.test_enum.AUTO_SCALING_CPU:
-                        $scope.$parent.$broadcast('testStatusUpdate', "Running Auto Scaling (CPU) Test");
-                        // url = 'https://ocpnp-dev.fhlmc.com:8443/oapi/v1';
-                        $scope.url = 'tests/autoscale_cpu.jsp?duration=1';
-                        Appconfig.replicas=1;
-                        dc = setdeploymentconfig();
-                        // Appconfig.replicas=dc.status.replicas;
-                        $scope.$parent.$broadcast('testStatusUpdate', "Set number of pods to 1");
-
-                        $scope.$watch(
-                            function(){ return Appconfig.podcount; },
-                            function(podcount){
-                                $scope.$parent.$broadcast('testStatusUpdate', "Current pod count: " + podcount);
-                                if(podcount == 1){
-
-                                    $scope.$parent.$broadcast('testStatusUpdate', "Starting Test.");
-                                    $http.get($scope.url).then(
-                                        /* success */
-                                        function(response) {
-                                            $scope.$parent.$broadcast('testStatusUpdate', "SUCCESS");
-                                        },
-                                        /* failure */
-                                        function(error) {
-                                            $scope.$parent.$broadcast('testStatusUpdate', "FAIL");
-                                        }
-                                    );
-                                }else{
-                                    $scope.$parent.$broadcast('testStatusUpdate', "Waiting for pods count to be 1");
-                                }
-                            }
-                        );
-
-
-
+                        autoscale_test();
                         break;
                     case $scope.test_enum.AUTO_SCALING_REQ:
-                        $scope.$parent.$broadcast('testStatusUpdate', "Running Auto Scaling (Requests) Test");
-
-                        // url = 'https://ocpnp-dev.fhlmc.com:8443/oapi/v1';
-                        $scope.url = 'tests/autoscale_request.jsp';
-
-                        // poll for number of sessions
-
-                        // when session count reaches threashold increase replicas
-                        dc = setdeploymentconfig();
-
-
-                        $scope.request_count = $cookies.get('request_count');
-
+                        scalesession_test();
                         break;
-
                     case $scope.test_enum.HA:
-                        /* ~~~~~~~~~~~~~~~~~~~~~~ */
-                        /* High Availability Test */
-                        /* ~~~~~~~~~~~~~~~~~~~~~~ */
-                        $scope.url = 'test/ha.jsp';
-                        $scope.$parent.$broadcast('testStatusUpdate', "Running High Availability Test");
-                        console.log("Starting HA Test");
-                        $http.get(
-                            $scope.url
-                        ).then(
-                            /* Success */
-                            function (response) {
-
-                                $scope.testdata = response.data;
-                                $scope.testname = $scope.testdata.response[0].name;
-                                // alert("DEBUG: Called test:" + $scope.testname + " at " + url);
-                                $scope.getUrl();
-                                $scope.$parent.$broadcast('testStatusUpdate', "SUCCESS");
-                            },
-                            /* FAIL */
-                            function(response){
-                                $scope.testStatus = "FAILURE";
-                                $scope.$parent.$broadcast('testStatusUpdate', 'FAILED');
-                            }
-                        );
+                        ha_test();
                         break;
                 }
             };
@@ -192,6 +125,80 @@ angular.
                 );
 
                 return $scope.dc;
+            }
+
+            // TESTS
+            autoscale_test = function(){
+                $scope.$parent.$broadcast('testStatusUpdate', "Running Auto Scaling (CPU) Test");
+                // url = 'https://ocpnp-dev.fhlmc.com:8443/oapi/v1';
+                $scope.url = 'tests/autoscale_cpu.jsp?duration=1';
+                Appconfig.replicas=1;
+                dc = setdeploymentconfig();
+                // Appconfig.replicas=dc.status.replicas;
+                $scope.$parent.$broadcast('testStatusUpdate', "Set number of pods to 1");
+
+                $scope.$watch(
+                    function(){ return Appconfig.podcount; },
+                    function(podcount){
+                        $scope.$parent.$broadcast('testStatusUpdate', "Current pod count: " + podcount);
+                        if(podcount == 1){
+
+                            $scope.$parent.$broadcast('testStatusUpdate', "Starting Test.");
+                            $http.get($scope.url).then(
+                                /* success */
+                                function(response) {
+                                    $scope.$parent.$broadcast('testStatusUpdate', "SUCCESS");
+                                },
+                                /* failure */
+                                function(error) {
+                                    $scope.$parent.$broadcast('testStatusUpdate', "FAIL");
+                                }
+                            );
+                        }else{
+                            $scope.$parent.$broadcast('testStatusUpdate', "Waiting for pods count to be 1");
+                        }
+                    }
+                );
+            }
+            scalesession_test = function(){
+                $scope.$parent.$broadcast('testStatusUpdate', "Running Auto Scaling (Requests) Test");
+
+                // url = 'https://ocpnp-dev.fhlmc.com:8443/oapi/v1';
+                $scope.url = 'tests/autoscale_request.jsp';
+
+                // poll for number of sessions
+
+                // when session count reaches threashold increase replicas
+                dc = setdeploymentconfig();
+
+
+                $scope.request_count = $cookies.get('request_count');
+            }
+            ha_test = function(){
+                /* ~~~~~~~~~~~~~~~~~~~~~~ */
+                /* High Availability Test */
+                /* ~~~~~~~~~~~~~~~~~~~~~~ */
+                $scope.url = 'test/ha.jsp';
+                $scope.$parent.$broadcast('testStatusUpdate', "Running High Availability Test");
+                console.log("Starting HA Test");
+                $http.get(
+                    $scope.url
+                ).then(
+                    /* Success */
+                    function (response) {
+
+                        $scope.testdata = response.data;
+                        $scope.testname = $scope.testdata.response[0].name;
+                        // alert("DEBUG: Called test:" + $scope.testname + " at " + url);
+                        $scope.getUrl();
+                        $scope.$parent.$broadcast('testStatusUpdate', "SUCCESS");
+                    },
+                    /* FAIL */
+                    function(response){
+                        $scope.testStatus = "FAILURE";
+                        $scope.$parent.$broadcast('testStatusUpdate', 'FAILED');
+                    }
+                );
             }
         }]
     });

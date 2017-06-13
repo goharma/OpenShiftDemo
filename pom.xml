@@ -19,7 +19,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-                    <outputDirectory>C:\work\apache-tomcat-9.0.0.M21\webapps</outputDirectory>
+                    <outputDirectory>/wildfly/standalone/deployments</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

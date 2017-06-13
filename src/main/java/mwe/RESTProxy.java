@@ -76,8 +76,6 @@ public class RESTProxy {
     public Response getSessionID(){
         Response response = null;
 
-
-
         return response;
     }
 

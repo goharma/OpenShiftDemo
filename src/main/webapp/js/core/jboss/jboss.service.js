@@ -2,7 +2,7 @@ angular.
     module('core.jboss').
         factory('Jboss', ['$resource',
             function($resource) {
-                this.url = '/management';
+                this.url = 'http://localhost:9990/management';
                 this.paramDefaults = null;
                 this.actions = null;
                 this.options = null;

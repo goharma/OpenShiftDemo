@@ -2,7 +2,7 @@
 <div class="section-body">
 <ul>
         <li class="pod-list-item" ng-repeat="pod in pods.items">
-            <div class="pod {{pod.status.phase|lowercase}}">
+            <div ng-class="pod.class">
                 <table width="100%">
                     <tr><td rowspan="3"><img src="images/{{pod.status.phase|lowercase}}.png" /></td></tr>
                     <tr><td align="right" class="pod-info">{{pod.status.podIP}}</td></tr>
